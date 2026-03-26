@@ -1,0 +1,15 @@
+services:
+  - type: web
+    name: codex-root-v1
+    env: node
+    plan: free
+    buildCommand: "npm install"
+    startCommand: "npm start"
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 10000
+      # Set these in Render dashboard for real:
+      # - key: STRIPE_SECRET_KEY
+      # - key: STRIPE_WEBHOOK_SECRET
