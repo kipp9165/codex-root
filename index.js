@@ -78,6 +78,37 @@ app.post("/api/codex/hookdeck/connect", (req, res) => {
   res.json({ ok: true, message: "Webhook received (stubbed)" });
 });
 
+// User lookup
+app.get("/me", (req, res) => {
+  const { email } = req.query;
+  if (!email) return res.status(400).json({ error: "email required" });
+  res.json({
+    email,
+    tier: "free",
+    stripeCustomerId: null
+  });
+});
+
+// Billing checkout
+app.post("/billing/checkout", (req, res) => {
+  const { priceId, customerEmail, successUrl, cancelUrl } = req.body;
+  if (!priceId || !customerEmail) {
+    return res.status(400).json({ error: "priceId and customerEmail required" });
+  }
+  // Stub: return successUrl as placeholder until Stripe is wired
+  res.json({ url: successUrl || "/" });
+});
+
+// Billing portal
+app.post("/billing/portal", (req, res) => {
+  const { customerId, returnUrl } = req.body;
+  if (!customerId) {
+    return res.status(400).json({ error: "customerId required" });
+  }
+  // Stub: return returnUrl as placeholder until Stripe is wired
+  res.json({ url: returnUrl || "/" });
+});
+
 // Root
 app.get("/", (req, res) => {
   res.send("Codex Root v0.7 is running.");
