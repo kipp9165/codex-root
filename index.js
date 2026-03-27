@@ -1,7 +1,29 @@
 const express = require("express");
+const cors = require("cors");
 const app = express();
 
+// Middleware
+app.use(cors());
 app.use(express.json());
+
+// API Routes
+const meRouter = require("./src/routes/me");
+const capabilitiesRouter = require("./src/routes/capabilities");
+const stripeRouter = require("./src/routes/stripe");
+const webhooksRouter = require("./src/routes/webhooks");
+const tierRouter = require("./src/routes/tier");
+const capabilityMapRouter = require("./src/routes/capabilityMap");
+const eventsRouter = require("./src/routes/events");
+const systemRouter = require("./src/routes/system");
+
+app.use("/me", meRouter);
+app.use("/capabilities", capabilitiesRouter);
+app.use("/stripe", stripeRouter);
+app.use("/webhooks", webhooksRouter);
+app.use("/tier", tierRouter);
+app.use("/capability-map", capabilityMapRouter);
+app.use("/events", eventsRouter);
+app.use("/system", systemRouter);
 
 // Codex Root v0.7 — State Endpoint
 app.get("/api/codex/state", (req, res) => {
@@ -81,6 +103,13 @@ app.post("/api/codex/hookdeck/connect", (req, res) => {
 // Root
 app.get("/", (req, res) => {
   res.send("Codex Root v0.7 is running.");
+});
+
+// Error middleware
+// eslint-disable-next-line no-unused-vars
+app.use((err, req, res, next) => {
+  console.error(err.stack);
+  res.status(500).json({ error: "Internal Server Error", message: err.message });
 });
 
 const PORT = process.env.PORT || 3000;
